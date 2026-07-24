@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tech Job Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Tech Job Tracker</h1>
+  </header>
+
+  <main>
+    <section id="search-section">
+      <input type="text" id="job-input" placeholder="e.g. Developer" value="developer">
+      <input type="text" id="location-input" placeholder="e.g. London" value="london">
+      <button id="search-btn">Search Jobs</button>
+    </section>
+
+    <div id="status-message"></div>
+
+    <section id="jobs-container" class="jobs-grid">
+      <!-- Job cards will be inserted here dynamically -->
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
