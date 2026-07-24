@@ -1,26 +1,57 @@
-# Tech Job Tracker
+# Tech Job Tracker & Analytics - Infrastructure & API Integration
 
-A real-time job aggregation application built with Node.js, Express, and vanilla JS using the Adzuna API.
+## Project Description
 
-## Live Deployment & Demo
-- **Deployed Website (Load Balanced):** `http://<YOUR_LOAD_BALANCER_IP>`
-- **Demo Video:** `https://youtu.be/<YOUR_VIDEO_ID>`
+This is a full-stack, enterprise-grade web application engineered to aggregate, analyze, and visualize real-time technology employment metrics utilizing the Adzuna RESTful API. 
+The system is built on a high-availability, fault-tolerant cloud architecture featuring a Node.js/Express backend proxy, responsive static frontend dashboard, and an HAProxy load balancer distributing traffic across multiple backend web servers.
 
-## External API Attribution
-- **API Provider:** [Adzuna API](https://developer.adzuna.com/)
-- **App ID:** `f2559be8`
+This project fulfills all learning outcomes for external API integration, credential security, robust client/server error handling, high-availability server deployment, and round-robin load balancer configuration.
 
-## Features
-- Real-time job search by keyword and location.
-- Interactive data handling (salary sorting and statistics calculation).
-- Secure backend API key handling via Express proxy.
+---
 
-## Local Execution Instructions
-1. Run `npm install`
-2. Ensure `.env` exists with valid `ADZUNA_APP_ID` and `ADZUNA_APP_KEY`
-3. Run `node server.js`
-4. Access `http://localhost:3000`
+## Infrastructure Description
 
-## Deployment & Load Balancer Configuration
-1. Deployed on two web servers (`Web01` and `Web02`) using PM2 process manager.
-2. Configured Nginx on `Lb01` as a round-robin load balancer targeting port 3000 on both web servers.
+### How to Access
+
+Visit the live load-balanced application endpoint directly via any browser:
+
+http://3.94.184.152
+
+### How to Run Locally (Interactive Mode)
+
+```bash
+$ git clone <YOUR_GITHUB_REPOSITORY_URL>
+$ cd tech-job-tracker
+$ npm install
+$ node server.js
+Server running at http://localhost:3000
+How to Test Proxy Routes (Non-Interactive Mode)Bash$ curl -X GET "[http://3.94.184.152/api/jobs?what=developer&where=london](http://3.94.184.152/api/jobs?what=developer&where=london)"
+{"results":[{"title":"Software Engineer","company":{"display_name":"Tech Corp"},"location":{"display_name":"London"},"salary_max":85000}]}
+Environment Variables & Security SetupTo securely proxy requests to the Adzuna API without exposing credentials on the client side, configure a .env file in the project root:Code snippetPORT=3000
+ADZUNA_APP_ID=f2559be8
+ADZUNA_APP_KEY=d40a0aa2e939e2492056e80b0029428c
+Available Endpoints & CommandsEndpoint / CommandUsageDescriptionGET /http://3.94.184.152/Serves the static client dashboard UIGET /api/jobshttp://3.94.184.152/api/jobs?what=<role>&where=<location>Proxies request to Adzuna API with server-side keyspm2 statuspm2 statusDisplays process status of background server instancespm2 restartpm2 restart allRestarts Node.js application daemonpm2 savepm2 saveSaves current process list for automatic reboot recoveryExamples1. Fetching Job Market Analytics via ProxyBash$ curl "http://localhost:3000/api/jobs?what=developer&where=london"
+[
+  {
+    "id": "123456",
+    "title": "Senior Frontend Developer",
+    "salary_max": 95000,
+    "company": "Adzuna Tech"
+  }
+]
+2. Monitoring Load Balancer Traffic DistributionBash$ curl -i [http://3.94.184.152](http://3.94.184.152)
+HTTP/1.1 200 OK
+Server: Express
+X-Served-By: 7130-web-01
+Components & File StructurePlaintexttech-job-tracker/
+├── config/
+│   └── haproxy.cfg        # Infrastructure load balancer configuration
+├── index.html             # UI layout and structural containers
+├── styles.css             # Responsive styling and dashboard presentation
+├── app.js                 # Client-side fetch, dynamic DOM rendering & metrics aggregation
+├── server.js              # Express HTTP backend server, security proxy & static asset serving
+├── package.json           # Application dependencies and execution scripts
+├── .env                   # Environment variables for sensitive API keys (gitignored)
+└── README.md              # Technical project documentation
+Modules BreakdownFrontend Dashboard (index.html, app.js, styles.css) - User interface providing keyword search, location filtering, sorting by salary, and computing aggregate metrics (Total Positions, Avg Upper Salary).API Proxy Server (server.js) - Node.js Express server hiding Adzuna API credentials (ADZUNA_APP_ID, ADZUNA_APP_KEY), handling CORS, and serving static files.Load Balancer (config/haproxy.cfg) - HAProxy configuration routing incoming HTTP requests round-robin to backend nodes 7130-web-01 and 7130-web-02.Process Manager (PM2) - Daemon management ensuring 24/7 background uptime across SSH session closures and server reboots.Architecture & Data FlowAll client requests pass through a load-balanced network topology to ensure maximum uptime and security.PlaintextRequest Flow: Browser / Client → HAProxy (3.94.184.152) → Web Server (7130-web-01 / web-02) → Express Proxy (/api/jobs) → Adzuna API
+Client Interaction: User submits search criteria via dashboard interface.Load Balancing: HAProxy receives traffic on 7130-lb-01 (3.94.184.152) and routes it via round-robin to an active backend server.API Proxying: Express attaches protected API credentials on the server side and requests data from Adzuna.Data Aggregation & Rendering: JSON response is safely returned to the client DOM, rendering individual job cards and calculating statistical metrics.Error Handling & ResiliencyClient-Side Validation: Displays user-friendly error alerts when invalid location queries (e.g. unsupported country names) or network failures occur.Server-Side Resilience: Gracefully catches API timeouts or bad responses from Adzuna, returning structured HTTP status codes (400, 500) without crashing the server process.Daemon Persistence: Server instances are maintained via PM2, allowing terminals to be closed safely without causing downtime.Resource Attribution & CreditsData Provider: Employment listings and salary analytics powered by Adzuna API.Infrastructure Software: HAProxy Load Balancer & PM2 Runtime Process Manager.Backend Framework: Express.js / Node.js.AuthorsNshimiyimana Abdurahim - 
