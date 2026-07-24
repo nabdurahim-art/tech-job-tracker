@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -8,12 +9,20 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('.')); // Serves index.html, app.js, style.css from current folder
+
+// Serve static assets (index.html, styles.css, app.js) safely from the root directory
+// 'dotfiles: ignore' ensures files like .env cannot be accessed via the browser
+app.use(express.static(__dirname, { dotfiles: 'ignore' }));
+
+// Explicit route to serve the main HTML dashboard
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 // Secure Proxy Route to Adzuna API
 app.get('/api/jobs', async (req, res) => {
   try {
-    // Extract search query parameters from client request or use assignment defaults
+    // Extract search query parameters from client request or use defaults
     const what = req.query.what || 'developer';
     const where = req.query.where || 'london';
     const page = req.query.page || 1;
@@ -49,7 +58,7 @@ app.get('/api/jobs', async (req, res) => {
   }
 });
 
-// Bind to 0.0.0.0 to allow incoming browser/network connections
+// Bind to 0.0.0.0 to handle incoming browser & network traffic
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on http://0.0.0.0:${PORT}`);
 });
