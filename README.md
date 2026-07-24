@@ -53,5 +53,37 @@ Components & File StructurePlaintexttech-job-tracker/
 ├── package.json           # Application dependencies and execution scripts
 ├── .env                   # Environment variables for sensitive API keys (gitignored)
 └── README.md              # Technical project documentation
-Modules BreakdownFrontend Dashboard (index.html, app.js, styles.css) - User interface providing keyword search, location filtering, sorting by salary, and computing aggregate metrics (Total Positions, Avg Upper Salary).API Proxy Server (server.js) - Node.js Express server hiding Adzuna API credentials (ADZUNA_APP_ID, ADZUNA_APP_KEY), handling CORS, and serving static files.Load Balancer (config/haproxy.cfg) - HAProxy configuration routing incoming HTTP requests round-robin to backend nodes 7130-web-01 and 7130-web-02.Process Manager (PM2) - Daemon management ensuring 24/7 background uptime across SSH session closures and server reboots.Architecture & Data FlowAll client requests pass through a load-balanced network topology to ensure maximum uptime and security.PlaintextRequest Flow: Browser / Client → HAProxy (3.94.184.152) → Web Server (7130-web-01 / web-02) → Express Proxy (/api/jobs) → Adzuna API
-Client Interaction: User submits search criteria via dashboard interface.Load Balancing: HAProxy receives traffic on 7130-lb-01 (3.94.184.152) and routes it via round-robin to an active backend server.API Proxying: Express attaches protected API credentials on the server side and requests data from Adzuna.Data Aggregation & Rendering: JSON response is safely returned to the client DOM, rendering individual job cards and calculating statistical metrics.Error Handling & ResiliencyClient-Side Validation: Displays user-friendly error alerts when invalid location queries (e.g. unsupported country names) or network failures occur.Server-Side Resilience: Gracefully catches API timeouts or bad responses from Adzuna, returning structured HTTP status codes (400, 500) without crashing the server process.Daemon Persistence: Server instances are maintained via PM2, allowing terminals to be closed safely without causing downtime.Resource Attribution & CreditsData Provider: Employment listings and salary analytics powered by Adzuna API.Infrastructure Software: HAProxy Load Balancer & PM2 Runtime Process Manager.Backend Framework: Express.js / Node.js.AuthorsNshimiyimana Abdurahim - 
+##Modules Breakdown
+
+Frontend Dashboard (index.html, app.js, styles.css) - User interface providing keyword search, location filtering, sorting by salary, and computing aggregate metrics (Total Positions, Avg Upper Salary).
+
+API Proxy Server (server.js) - Node.js Express server hiding Adzuna API credentials (ADZUNA_APP_ID, ADZUNA_APP_KEY), handling CORS, and serving static files.Load Balancer (config/haproxy.cfg) - HAProxy configuration routing incoming HTTP requests round-robin to backend nodes 7130-web-01 and 7130-web-02.Process Manager (PM2) - Daemon management ensuring 24/7 background uptime across SSH session closures and server reboots.
+
+##Architecture & Data Flow
+
+All client requests pass through a load-balanced network topology to ensure maximum uptime and security.
+Request Flow: Browser / Client → HAProxy (3.94.184.152) → Web Server (7130-web-01 / web-02) → Express Proxy (/api/jobs) → Adzuna API
+
+1. Client Interaction: User submits search criteria via dashboard interface.
+
+2. Load Balancing: HAProxy receives traffic on 7130-lb-01 (3.94.184.152) and routes it via round-robin to an active backend server.
+
+3.API Proxying: Express attaches protected API credentials on the server side and requests data from Adzuna.
+4. Data Aggregation & Rendering: JSON response is safely returned to the client DOM, rendering individual job cards and calculating statistical metrics.
+##Error Handling & ResiliencyClient
+
+1. Side Validation: Displays user-friendly error alerts when invalid location queries (e.g. unsupported country names) or network failures occur.
+
+2. Server-Side Resilience: Gracefully catches API timeouts or bad responses from Adzuna, returning structured HTTP status codes (400, 500) without crashing the server process.
+3. Daemon Persistence: Server instances are maintained via PM2, allowing terminals to be closed safely without causing downtime.
+
+##Resource Attribution & Credits
+
+1. Data Provider: Employment listings and salary analytics powered by Adzuna API.
+
+2. Infrastructure Software: HAProxy Load Balancer & PM2 Runtime Process Manager.
+
+3. Backend Framework: Express.js / Node.js.
+
+
+AuthorsNshimiyimana Abdurahim - 
