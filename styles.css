@@ -1,0 +1,233 @@
+:root {
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+  --text-dark: #0f172a;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  --accent-green: #059669;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-main);
+  color: #334155;
+  min-height: 100vh;
+}
+
+.app-header {
+  background-color: var(--text-dark);
+  color: white;
+  padding: 32px 20px;
+  text-align: center;
+  border-bottom: 4px solid var(--primary);
+}
+
+.header-container h1 {
+  margin: 0 0 6px 0;
+  font-size: 1.8rem;
+  letter-spacing: -0.5px;
+}
+
+.header-container p {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 0.95rem;
+}
+
+.main-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+/* Control Bar Layout */
+#search-section {
+  background: var(--bg-card);
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  display: grid;
+  grid-template-columns: 2fr 2fr 1.5fr auto;
+  gap: 12px;
+  align-items: end;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  margin-bottom: 20px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-group label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+#search-section input,
+#search-section select {
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background-color: #fff;
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+#search-section input:focus,
+#search-section select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+#search-btn {
+  padding: 11px 24px;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background-color 0.2s;
+  height: 42px;
+}
+
+#search-btn:hover {
+  background-color: var(--primary-hover);
+}
+
+/* Metrics Summary Bar */
+.stats-bar {
+  display: flex;
+  gap: 20px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  padding: 14px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: #1e40af;
+}
+
+.stat-value {
+  font-size: 1rem;
+  color: #1e3a8a;
+}
+
+#status-message {
+  margin-bottom: 20px;
+  font-weight: 500;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* Job Cards Grid */
+.jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.job-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.job-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+}
+
+.job-card h3 {
+  margin: 0 0 6px 0;
+  font-size: 1.15rem;
+  color: var(--text-dark);
+  line-height: 1.3;
+}
+
+.company-name {
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+
+.job-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.meta-badge {
+  background: #f1f5f9;
+  color: #475569;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.meta-badge.salary-badge {
+  background: #ecfdf5;
+  color: var(--accent-green);
+  font-weight: 600;
+}
+
+.job-description {
+  font-size: 0.88rem;
+  color: #475569;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.apply-btn {
+  display: block;
+  text-align: center;
+  background-color: var(--text-dark);
+  color: white;
+  text-decoration: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.apply-btn:hover {
+  background-color: #334155;
+}
+
+/* Responsive Scaling */
+@media (max-width: 768px) {
+  #search-section {
+    grid-template-columns: 1fr;
+  }
+}

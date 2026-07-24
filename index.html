@@ -3,25 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tech Job Tracker</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Tech Job Tracker & Analytics</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header>
-    <h1>Tech Job Tracker</h1>
+  <header class="app-header">
+    <div class="header-container">
+      <h1>Tech Job Tracker</h1>
+      <p>Search, filter, and track real-time tech opportunities</p>
+    </div>
   </header>
 
-  <main>
+  <main class="main-container">
+    <!-- Search & Filter Controls -->
     <section id="search-section">
-      <input type="text" id="job-input" placeholder="e.g. Developer" value="developer">
-      <input type="text" id="location-input" placeholder="e.g. London" value="london">
+      <div class="input-group">
+        <label for="job-input">Keyword</label>
+        <input type="text" id="job-input" placeholder="e.g. Developer, React, Python" value="developer">
+      </div>
+
+      <div class="input-group">
+        <label for="location-input">Location</label>
+        <input type="text" id="location-input" placeholder="e.g. London, Remote" value="london">
+      </div>
+
+      <div class="input-group select-group">
+        <label for="sort-select">Sort By</label>
+        <select id="sort-select">
+          <option value="default">Relevance</option>
+          <option value="salary-high">Highest Salary</option>
+          <option value="salary-low">Lowest Salary</option>
+        </select>
+      </div>
+
       <button id="search-btn">Search Jobs</button>
     </section>
+
+    <!-- Metrics Summary Bar -->
+    <div id="stats-bar" class="stats-bar">
+      <div class="stat-item">
+        <span class="stat-label">Total Positions</span>
+        <strong id="stat-count" class="stat-value">0</strong>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Avg Upper Salary</span>
+        <strong id="stat-avg" class="stat-value">£0</strong>
+      </div>
+    </div>
 
     <div id="status-message"></div>
 
     <section id="jobs-container" class="jobs-grid">
-      <!-- Job cards will be inserted here dynamically -->
+      <!-- Dynamic cards render here -->
     </section>
   </main>
 
