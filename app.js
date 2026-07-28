@@ -4,91 +4,91 @@ document.addEventListener('DOMContentLoaded', () => {
   const searchBtn = document.getElementById('search-btn');
   const sortSelect = document.getElementById('sort-select');
 
-  let currentJobs = [];
+  let loadedJobListings = [];
 
-  // Fetch jobs from Express server endpoint
+  // Main function to fetch job records from our backend proxy
   async function fetchJobs(query = 'developer', location = 'london') {
     jobsContainer.innerHTML = '<div class="status-message">Loading opportunities...</div>';
-    statusMessage.textContent = 'Contacting server...';
+    statusMessage.textContent = 'Fetching job data from API...';
 
     try {
       const response = await fetch(`/api/jobs?what=${encodeURIComponent(query)}&where=${encodeURIComponent(location)}`);
 
       if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
+        throw new Error(`Server returned status: ${response.status}`);
       }
 
       const data = await response.json();
 
       if (!data.results || data.results.length === 0) {
-        statusMessage.textContent = 'No jobs found. Try adjusting your search criteria.';
+        statusMessage.textContent = 'No matching positions found. Try broadening your terms.';
         jobsContainer.innerHTML = '';
         updateMetrics([], 0);
         return;
       }
 
-      currentJobs = data.results;
-      statusMessage.textContent = `Displaying roles for "${query}" in ${location}`;
+      loadedJobListings = data.results;
+      statusMessage.textContent = `Showing active listings for "${query}" in ${location}`;
 
-      updateMetrics(currentJobs, data.count);
+      updateMetrics(loadedJobListings, data.count);
       processAndRender();
 
-    } catch (error) {
-      console.error('Fetch error:', error);
-      statusMessage.textContent = 'Unable to load jobs. Verify server.js is running.';
+    } catch (err) {
+      console.error('API connection failed:', err);
+      statusMessage.textContent = 'Could not reach server. Ensure backend node service is running.';
       jobsContainer.innerHTML = '';
     }
   }
 
-  // Calculate dynamic stats for metrics bar
+  // Update metrics dashboard values
   function updateMetrics(jobs, totalCount) {
     document.getElementById('stat-count').textContent = (totalCount || jobs.length).toLocaleString();
 
     const maxSalaries = jobs.map(j => j.salary_max).filter(s => s > 0);
     const avg = maxSalaries.length
-      ? Math.round(maxSalaries.reduce((sum, val) => sum + val, 0) / maxSalaries.length)
+      ? Math.round(maxSalaries.reduce((acc, val) => acc + val, 0) / maxSalaries.length)
       : 0;
 
     document.getElementById('stat-avg').textContent = avg ? `£${avg.toLocaleString()}` : 'N/A';
   }
 
-  // Handle local sorting and data manipulation
+  // Sort and display job list based on user selections
   function processAndRender() {
-    let sortedJobs = [...currentJobs];
-    const sortVal = sortSelect.value;
+    let sortedJobs = [...loadedJobListings];
+    const userSort = sortSelect.value;
 
-    if (sortVal === 'salary-high') {
+    if (userSort === 'salary-high') {
       sortedJobs.sort((a, b) => (b.salary_max || 0) - (a.salary_max || 0));
-    } else if (sortVal === 'salary-low') {
+    } else if (userSort === 'salary-low') {
       sortedJobs.sort((a, b) => (a.salary_min || 0) - (b.salary_min || 0));
     }
 
     renderJobs(sortedJobs);
   }
 
-  // Render job cards into HTML
+  // Generate and insert HTML cards dynamically
   function renderJobs(jobs) {
     jobsContainer.innerHTML = jobs.map(job => {
-      let salaryText = 'Not disclosed';
+      let salaryDisplay = 'Not disclosed';
       if (job.salary_min && job.salary_max) {
-        const min = Math.round(job.salary_min).toLocaleString();
-        const max = Math.round(job.salary_max).toLocaleString();
-        salaryText = min === max ? `£${min}` : `£${min} - £${max}`;
+        const minVal = Math.round(job.salary_min).toLocaleString();
+        const maxVal = Math.round(job.salary_max).toLocaleString();
+        salaryDisplay = minVal === maxVal ? `£${minVal}` : `£${minVal} - £${maxVal}`;
       }
 
       return `
         <article class="job-card">
           <div class="job-card-header">
-            <h3>${escapeHtml(job.title)}</h3>
-            <span class="company-name">${escapeHtml(job.company?.display_name || 'Direct Employer')}</span>
+            <h3>${sanitizeText(job.title)}</h3>
+            <span class="company-name">${sanitizeText(job.company?.display_name || 'Direct Employer')}</span>
           </div>
 
           <div class="job-meta">
-            <span class="meta-badge">📍 ${escapeHtml(job.location?.display_name || 'Remote/UK')}</span>
-            <span class="meta-badge salary-badge">💰 ${salaryText}</span>
+            <span class="meta-badge">📍 ${sanitizeText(job.location?.display_name || 'Remote/UK')}</span>
+            <span class="meta-badge salary-badge">💰 ${salaryDisplay}</span>
           </div>
 
-          <p class="job-description">${escapeHtml(job.description.slice(0, 160))}...</p>
+          <p class="job-description">${sanitizeText(job.description.slice(0, 160))}...</p>
 
           <a href="${job.redirect_url}" target="_blank" rel="noopener noreferrer" class="apply-btn">View Job Posting</a>
         </article>
@@ -96,8 +96,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }).join('');
   }
 
-  // XSS protection helper
-  function escapeHtml(str) {
+  // Helper security function to sanitize strings against XSS injection
+  function sanitizeText(str) {
     if (!str) return '';
     return str.replace(/[&<>"']/g, match => ({
       '&': '&amp;',
@@ -108,15 +108,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }[match]));
   }
 
-  // Listeners
+  // Event handlers for UI elements
   searchBtn.addEventListener('click', () => {
-    const job = document.getElementById('job-input').value.trim();
-    const loc = document.getElementById('location-input').value.trim();
-    fetchJobs(job, loc);
+    const jobInput = document.getElementById('job-input').value.trim();
+    const locInput = document.getElementById('location-input').value.trim();
+    fetchJobs(jobInput, locInput);
   });
 
   sortSelect.addEventListener('change', processAndRender);
 
-  // Default fetch
+  // Initialize app with default search query
   fetchJobs();
 });

@@ -148,15 +148,17 @@ body {
   gap: 20px;
 }
 
+/* Refined and structured job card component */
 .job-card {
-  background: var(--bg-card);
+  background-color: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 10px;
   padding: 22px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .job-card:hover {
@@ -230,17 +232,4 @@ body {
   #search-section {
     grid-template-columns: 1fr;
   }
-}
-.job-card {
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease;
-}
-
-.job-card:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
