@@ -19,6 +19,9 @@ This project fulfills all learning outcomes for external API integration, creden
 * **Live Application:** Visit the live load-balanced endpoint directly via any web browser:  
   [http://3.94.184.152](http://3.94.184.152)
 
+* **Demo video link : **
+  https://www.loom.com/share/679ae1dc0aa44419b4f2899bc1080356
+
 ### How to Run Locally (Interactive Mode)
 
 ```bash
