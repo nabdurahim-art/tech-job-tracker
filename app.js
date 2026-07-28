@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderJobs(sortedJobs);
   }
 
-  // Generate and insert HTML cards dynamically
+  // Generate and insert HTML cards dynamically with correct layout wrappers
   function renderJobs(jobs) {
     jobsContainer.innerHTML = jobs.map(job => {
       let salaryDisplay = 'Not disclosed';
@@ -78,17 +78,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
       return `
         <article class="job-card">
-          <div class="job-card-header">
+          <div>
             <h3>${sanitizeText(job.title)}</h3>
             <span class="company-name">${sanitizeText(job.company?.display_name || 'Direct Employer')}</span>
-          </div>
+            
+            <div class="job-meta">
+              <span class="meta-badge">📍 ${sanitizeText(job.location?.display_name || 'Remote/UK')}</span>
+              <span class="meta-badge salary-badge">💰 ${salaryDisplay}</span>
+            </div>
 
-          <div class="job-meta">
-            <span class="meta-badge">📍 ${sanitizeText(job.location?.display_name || 'Remote/UK')}</span>
-            <span class="meta-badge salary-badge">💰 ${salaryDisplay}</span>
+            <p class="job-description">${sanitizeText(job.description.slice(0, 160))}...</p>
           </div>
-
-          <p class="job-description">${sanitizeText(job.description.slice(0, 160))}...</p>
 
           <a href="${job.redirect_url}" target="_blank" rel="noopener noreferrer" class="apply-btn">View Job Posting</a>
         </article>
